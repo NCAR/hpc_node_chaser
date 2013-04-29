@@ -1,4 +1,5 @@
 import sys, os, subprocess
+import re
 
 verbose=False
 try:
@@ -11,6 +12,18 @@ try:
 except OSError:
     pass # already exists
 
+start_regex = re.compile(r".+: Dispatched to \d+ Hosts/Processors ")
+node_regex = re.compile(r"""<           # start of the pattern
+                              \d+       # number of tasks on that node
+                              \*        # literal star '*'
+                              (         # ---- capture as \1
+                              .*?       # name of the node (anything) 
+                              )         # ---- end of capture
+                                        # note '*' is greedy and would match as much as possible,
+                                        # whereas here we want to much as little as possible and
+                                        # therefore we use the modified '*?' variant
+                              >         # end of the pattern""", re.VERBOSE) 
+
 def log(string):
     if verbose:
         print string
@@ -20,9 +33,19 @@ def _get_nodes_in_stringIO(data):
     and return the list of nodes. It is useful to pass data
     and open filename in the invocation so this can be tested
     with plain strings instead of files."""
-    nodes=[]
+    found_start = False
+    node_string_as_list=[]
     for line in data:
-        pass
+        if found_start:
+            node_string_as_list.append(line.strip())
+        else:
+            match = start_regex.findall(line)
+            if match:
+                node_string_as_list.append(line.lstrip(match[0]).strip())
+                found_start = True
+
+    node_string = ''.join(node_string_as_list)
+    nodes = node_regex.findall(node_string)
     return nodes
 
 def get_nodes_in_job(jobid):
