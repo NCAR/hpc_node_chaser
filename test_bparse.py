@@ -11,7 +11,10 @@ Sat Apr 20 03:48:51 2013: Dispatched to 16384 Hosts/Processors <16*ys3769-ib> <
                           *ys3812-ib> <16*ys3813-ib> <16*ys3814-ib> <16*ys3815-
                           ib> <16*ys3816-ib> <16*ys3817-ib> <16*ys3818-ib> <16*
                           ys3819-ib> <16*ys3820-ib> <16*ys3821-ib> 
+Fri Apr 19 02:07:32 2013: Starting (Pid 22545);
+                          By chance mention of <16*ys6352-ib>
     """)
+    # note that ys6352-ib is mentioned by chance and should not be in the expected list
     expected = ["ys3769-ib", "ys3770-ib", "ys3771-ib", "ys3772-ib", "ys3801-ib", 
     "ys3802-ib", "ys3803-ib", "ys3804-ib", "ys3805-ib", "ys3806-ib", "ys3807-ib", 
     "ys3808-ib", "ys3809-ib", "ys3810-ib", "ys3811-ib", "ys3812-ib", "ys3813-ib",
