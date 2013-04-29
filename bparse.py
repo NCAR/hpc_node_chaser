@@ -15,22 +15,39 @@ def log(string):
     if verbose:
         print string
 
-def node_in_job(jobid):
-    return []
+def _get_nodes_in_stringIO(data):
+    """Parse a file or stringIO object in the bhist format
+    and return the list of nodes. It is useful to pass data
+    and open filename in the invocation so this can be tested
+    with plain strings instead of files."""
+    nodes=[]
+    for line in data:
+        pass
+    return nodes
 
-def invoke_bhist(jobid):
+def get_nodes_in_job(jobid):
+    """Wrapper facade around the bhist invocation logic and
+    bhist output parser. Simply return the list of nodes
+    where a given jobID ran."""
+    return _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
+
+def _invoke_bhist(jobid):
     """Invoke bhist for a specific jobid and store the
-    output in a temporary file. It's useful to cache since
-    bhist usually takes long to respond and repeated invocations
-    are likely while investigating a problem"""
+    output in a temporary file. It's useful to cache the output in
+    a file instead to process it, because bhist usually takes a long 
+    time to respond and repeated invocations are likely while 
+    investigating a problem. This function returns the full path
+    of the file containing the bhist output."""
     name = "bhist." + str(jobid) + ".txt"
+    fullname = TMPDIR + name
     ALL_FILES = os.listdir(TMPDIR)
     if not name in ALL_FILES:
-        command = "bhist -n 0 -l " + str(jobid) + " > " + TMPDIR + name
+        command = "bhist -n 0 -l " + str(jobid) + " > " + fullname
         log("Invoking: " + command)
         subprocess.call(command, shell=True)
     else:
-        log("Nothing to do: " + TMPDIR + name + " is already there")
+        log("Nothing to do: " + fullname + " is already there")
+    return fullname
 
 import argparse
 if __name__ == '__main__':
@@ -38,6 +55,7 @@ if __name__ == '__main__':
     g=parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
     b=parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
+    #parser.add_argument("-c", "--common-nodes", help="Find the set of common nodes among the specified jobs", action="store_true")
     args = parser.parse_args()
 
     if not args.bad:
@@ -55,10 +73,8 @@ if __name__ == '__main__':
     nodes_in_good_jobs =  []
     nodes_in_bad_jobs =  []
     for jobid in args.good:
-        invoke_bhist(jobid)
-        nodes_in_good_jobs.append(node_in_job(jobid))
+        nodes_in_good_jobs.append(get_nodes_in_job(jobid))
  
     for jobid in args.bad:
-        invoke_bhist(jobid)
-        nodes_in_bad_jobs.append(node_in_job(jobid))
+        nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
 
