@@ -91,7 +91,13 @@ def count_bad_nodes(list_of_badnode_lists):
             d[badnode] += 1
     return d
 
-def remove_good_nodes(bad_nodes, good_nodes):
+def remove_good_nodes(bad_nodes, list_of_goodnode_lists):
+    for goodnode_list in list_of_goodnode_lists:
+        for goodnode in goodnode_list:
+            try:
+                del bad_nodes[goodnode] # another strategy might be to decrement it instead
+            except KeyError:
+                pass                    # if it wasn't there, nothing to do
     return bad_nodes
 
 import argparse
@@ -117,4 +123,6 @@ if __name__ == '__main__':
         nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
 
     potential_bad_nodes = count_bad_nodes(nodes_in_bad_jobs)
+    bad_nodes = remove_good_nodes(potential_bad_nodes, nodes_in_good_jobs)
+    print bad_nodes
 
