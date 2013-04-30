@@ -4,7 +4,7 @@ import re
 
 verbose=False
 try:
-    TMPDIR=os.environ['TMPDIR']
+    TMPDIR=os.environ['TMPDIR'] + "/.bparse/"
 except KeyError:
     TMPDIR="/glade/scratch/" + os.environ['USER'] + "/.bparse/"
 
