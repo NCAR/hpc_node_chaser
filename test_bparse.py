@@ -3,6 +3,8 @@ import cStringIO
 
 def test_get_nodes_in_stringIO():
     s=cStringIO.StringIO("""
+This text at the beginning must be ignored
+Wed Apr 24 14:30:03 2012: Submitted from host <be1234-ib>, to Queue <economy>
 Sat Apr 20 03:48:51 2012: Dispatched to 16384 Hosts/Processors <16*be3769-ib> <
                           16*be3770-ib> <16*be3771-ib> <16*be3772-ib> <16*be380
                           1-ib> <16*be3802-ib> <16*be3803-ib> <16*be3804-ib> <1
@@ -15,6 +17,7 @@ Fri Apr 19 02:07:32 2012: Starting (Pid 22545);
                           By chance mention of <16*be6352-ib>
     """)
     # note that be6352-ib is mentioned by chance and should not be in the expected list
+    # note the same is true for be1234-ib
     expected = ["be3769-ib", "be3770-ib", "be3771-ib", "be3772-ib", "be3801-ib", 
     "be3802-ib", "be3803-ib", "be3804-ib", "be3805-ib", "be3806-ib", "be3807-ib", 
     "be3808-ib", "be3809-ib", "be3810-ib", "be3811-ib", "be3812-ib", "be3813-ib",
