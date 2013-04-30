@@ -39,7 +39,11 @@ def _get_nodes_in_stringIO(data):
     log("Parsing...")
     for line in data:
         if found_start:
+            if not line.startswith(' '):              # end of node list section
+                break
             node_string_as_list.append(line.strip())
+            if line.endswith(';'):                    # end of node list section
+                break
         else:
             match = start_regex.findall(line)
             if match:
