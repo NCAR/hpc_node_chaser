@@ -83,8 +83,13 @@ def _invoke_bhist(jobid):
         log("Nothing to do: " + fullname + " is already there")
     return fullname
 
+from collections import defaultdict
 def count_bad_nodes(list_of_badnode_lists):
-    return {}
+    d = defaultdict(int)
+    for badnode_list in list_of_badnode_lists:
+        for badnode in badnode_list:
+            d[badnode] += 1
+    return d
 
 import argparse
 if __name__ == '__main__':
@@ -108,5 +113,5 @@ if __name__ == '__main__':
     for jobid in args.bad:
         nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
 
-    print nodes_in_bad_jobs
+    potential_bad_nodes = count_bad_nodes(nodes_in_bad_jobs)
 
