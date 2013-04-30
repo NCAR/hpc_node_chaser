@@ -124,5 +124,16 @@ if __name__ == '__main__':
 
     potential_bad_nodes = count_bad_nodes(nodes_in_bad_jobs)
     bad_nodes = remove_good_nodes(potential_bad_nodes, nodes_in_good_jobs)
-    print bad_nodes
+
+    # transform the dict in list of tuples, sort on the index 1 (the number of times the node occurred in a bad job) starting form higher counts
+    bad_node_list = bad_nodes.items()
+    bad_node_list.sort(key=lambda element: element[1], reverse=True)
+
+    current = len(args.bad)
+    print "Nodes occurring in all the bad jobs"
+    for bad_node in bad_node_list:
+        if bad_node[1] < current:
+            current = bad_node[1]
+            print "\nNodes occurring in", str(current), "bad jobs"
+        print bad_node[0],
 
