@@ -91,6 +91,9 @@ def count_bad_nodes(list_of_badnode_lists):
             d[badnode] += 1
     return d
 
+def remove_good_nodes(bad_nodes, good_nodes):
+    return bad_nodes
+
 import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes from a list of good and bad LSF jobs")
