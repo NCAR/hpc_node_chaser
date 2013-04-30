@@ -25,3 +25,9 @@ Fri Apr 19 02:07:32 2012: Starting (Pid 22545);
     "be3820-ib", "be3821-ib"]
     nodes=bparse._get_nodes_in_stringIO(s)
     assert nodes == expected
+
+def test_count_bad_nodes():
+    list_of_lists = [["A", "B", "C"], ["B", "C", "D"]]
+    expected = {"A": 1, "B": 2, "C": 2, "D": 1 }
+    actual = bparse.count_bad_nodes(list_of_lists)
+    assert actual == expected

@@ -83,6 +83,9 @@ def _invoke_bhist(jobid):
         log("Nothing to do: " + fullname + " is already there")
     return fullname
 
+def count_bad_nodes(list_of_badnode_lists):
+    return {}
+
 import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes from a list of good and bad LSF jobs")
@@ -104,4 +107,6 @@ if __name__ == '__main__':
  
     for jobid in args.bad:
         nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
+
+    print nodes_in_bad_jobs
 
