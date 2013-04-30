@@ -1,3 +1,4 @@
+#!/bin/env python
 import sys, os, subprocess
 import re
 
