@@ -36,15 +36,18 @@ def _get_nodes_in_stringIO(data):
     with plain strings instead of files."""
     found_start = False
     node_string_as_list=[]
+    log("Parsing...")
     for line in data:
         if found_start:
             node_string_as_list.append(line.strip())
         else:
             match = start_regex.findall(line)
             if match:
+                log("Node list section found, starting in line\n===\n" + line + "===")
                 node_string_as_list.append(line.lstrip(match[0]).strip())
                 found_start = True
 
+    log("Parsing completed")
     node_string = ''.join(node_string_as_list)
     nodes = node_regex.findall(node_string)
     return nodes
@@ -53,6 +56,7 @@ def get_nodes_in_job(jobid):
     """Wrapper facade around the bhist invocation logic and
     bhist output parser. Simply return the list of nodes
     where a given jobID ran."""
+    log("\n---------------------------------------\nProcessing job " + str(jobid))
     return _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
 
 def _invoke_bhist(jobid):
@@ -98,7 +102,9 @@ if __name__ == '__main__':
     nodes_in_bad_jobs =  []
     for jobid in args.good:
         nodes_in_good_jobs.append(get_nodes_in_job(jobid))
+        log("Ended processing job " + str(jobid))
  
     for jobid in args.bad:
         nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
+        log("Ended processing job " + str(jobid))
 
