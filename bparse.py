@@ -79,21 +79,14 @@ def _invoke_bhist(jobid):
 
 import argparse
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes from a list of good and bad LSF job")
-    g=parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
-    b=parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad")
+    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes from a list of good and bad LSF jobs")
+    parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
+    parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
-    #parser.add_argument("-c", "--common-nodes", help="Find the set of common nodes among the specified jobs", action="store_true")
     args = parser.parse_args()
 
-    if not args.bad:
-        args.bad=[]
     if not args.good:
         args.good=[]
-    if len(args.bad) + len(args.good) == 0:
-        print "No jobs specified, nothing to do"
-        parser.print_usage()
-        sys.exit(2)
     if args.verbose:
         verbose = True
         log(v.help)
