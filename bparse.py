@@ -130,10 +130,13 @@ if __name__ == '__main__':
     bad_node_list.sort(key=lambda element: element[1], reverse=True)
 
     current = len(args.bad)
-    print "Nodes occurring in all the bad jobs"
     for bad_node in bad_node_list:
         if bad_node[1] < current:
             current = bad_node[1]
-            print "\nNodes occurring in", str(current), "bad jobs"
+            if current == len(args.bad):
+                n = "all"
+            else:
+                n = str(current)
+            print "\n\nNodes occurring in", n, "bad jobs, but none of the good jobs:"
         print bad_node[0],
 
