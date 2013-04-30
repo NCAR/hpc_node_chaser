@@ -129,7 +129,7 @@ if __name__ == '__main__':
     bad_node_list = bad_nodes.items()
     bad_node_list.sort(key=lambda element: element[1], reverse=True)
 
-    current = len(args.bad)
+    current = len(args.bad) + 1
     for bad_node in bad_node_list:
         if bad_node[1] < current:
             current = bad_node[1]
