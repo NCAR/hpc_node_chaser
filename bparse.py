@@ -57,7 +57,9 @@ def get_nodes_in_job(jobid):
     bhist output parser. Simply return the list of nodes
     where a given jobID ran."""
     log("\n---------------------------------------\nProcessing job " + str(jobid))
-    return _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
+    nodes = _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
+    log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
+    return nodes
 
 def _invoke_bhist(jobid):
     """Invoke bhist for a specific jobid and store the
@@ -95,9 +97,7 @@ if __name__ == '__main__':
     nodes_in_bad_jobs =  []
     for jobid in args.good:
         nodes_in_good_jobs.append(get_nodes_in_job(jobid))
-        log("Ended processing job " + str(jobid))
  
     for jobid in args.bad:
         nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
-        log("Ended processing job " + str(jobid))
 
