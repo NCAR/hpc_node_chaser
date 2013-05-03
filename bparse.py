@@ -92,8 +92,11 @@ from collections import defaultdict
 def count_bad_items(list_of_baditem_lists):
     d = defaultdict(int)
     for baditem_list in list_of_baditem_lists:
+        already_added = []
         for baditem in baditem_list:
-            d[baditem] += 1
+            if not baditem in already_added:
+                already_added.append(baditem)
+                d[baditem] += 1
     return d
 
 def remove_good_items(bad_items, list_of_gooditem_lists):
