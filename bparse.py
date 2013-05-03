@@ -7,11 +7,16 @@ try:
     TMPDIR=os.environ['TMPDIR'] + "/.bparse/"
 except KeyError:
     TMPDIR="/glade/scratch/" + os.environ['USER'] + "/.bparse/"
-
 try: 
     os.mkdir(TMPDIR)
 except OSError:
     pass # already exists
+
+try:
+    CONFDIR=os.environ['BPARSEDIR']
+except KeyError:
+    CONFDIR=os.environ['HOME'] + "/.bparse/"
+sys.path.append(CONFDIR)
 
 start_regex = re.compile(r".+: Dispatched to \d+ Hosts/Processors ")
 node_regex = re.compile(r"""<           # start of the pattern
@@ -102,9 +107,11 @@ def remove_good_nodes(bad_nodes, list_of_goodnode_lists):
 
 import argparse
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes from a list of good and bad LSF jobs")
+    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
     parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
     parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
+    parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + CONFDIR + "<mod>.py")
+#    parser.add_argument("--switch", help="Translate nodes names to switch names", action="store_true")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
     args = parser.parse_args()
 
@@ -113,6 +120,11 @@ if __name__ == '__main__':
     if args.verbose:
         verbose = True
         log(v.help)
+
+    if args.switch:
+        log("Loading " + CONFDIR + args.switch + ".py")
+        switches = __import__(args.switch)
+        log("But not using it yet...")
 
     nodes_in_good_jobs =  []
     nodes_in_bad_jobs =  []

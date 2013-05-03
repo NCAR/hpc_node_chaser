@@ -1,13 +1,58 @@
 bparse
 ======
 
-LSF helper to find bad performing nodes from a list of good and bad LSF jobs
+LSF helper to find bad performing nodes or switches from a list of good and
+bad LSF jobs
 
 ------
-usage: bparse.py [-h] --bad ID [ID ...] [--good ID [ID ...]] [--verbose]
+usage: bparse.py [-h] --bad ID [ID ...] [--good ID [ID ...]] [--switch <mod>]
+                 [--verbose]
+
 
 optional arguments:
   -h, --help          show this help message and exit
   --bad ID [ID ...]   LSF job IDs of the jobs to be considered bad
   --good ID [ID ...]  LSF job IDs of the jobs to be considered good
+  --switch <mod>      Translate nodes names to switch names, using python
+                      module $BPARSEDIR/<mod>.py
   --verbose           Verbosely print messages about everything
+
+------
+
+To get the list of switches, a translate function must be defined in
+$BPARSEDIR/<mod>.py file. If $BPARSEDIR is not defined, it is assumed
+to be $HOME/.bparse/ and the user is responsible for creating the directory
+and the file. If is possible and recommended to define more than one file
+in a tree-based network. For example the file leaf.py may contain:
+
+def translate(node):
+    switch = <some logic or LUT to parse the node string and find the switch>
+    return switch
+
+While another twig.py file may contain:
+
+import leaf
+def translate(node):
+    leaf_switch = leaf.translate(node)
+    twig_switch = <some logic or LUT to go from leaf_switch to twig_switch>
+    return twig_switch
+
+And yet another branch.py may be
+
+import twig
+def translate(node):
+    twig_switch = twig.translate(node)
+    branch_switch = <some logic or LUT to go from twig_switch to branch_switch>
+    return branch_switch
+
+And so on. 
+
+In this example, to see the list <leaf|twig|branch> switches involved in a set 
+of bad jobs, run:
+
+bparse.py --switch <leaf|twig|branch> --bad ID [ID ...] [--good ID [ID ...]]
+
+And of course you can personalize the names according to the conventions of your
+own network.
+
+------
