@@ -132,10 +132,10 @@ if __name__ == '__main__':
     items_in_good_jobs = []
     items_in_bad_jobs = []
     for jobid in args.good:
-        items_in_good_jobs.append(translate(get_nodes_in_job(jobid)))
+        items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
  
     for jobid in args.bad:
-        items_in_bad_jobs.append(translate(get_nodes_in_job(jobid)))
+        items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
 
     potential_bad_items = count_bad_items(items_in_bad_jobs)
     bad_items = remove_good_items(potential_bad_items, items_in_good_jobs)
