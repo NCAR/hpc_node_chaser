@@ -26,15 +26,15 @@ Fri Apr 19 02:07:32 2012: Starting (Pid 22545);
     nodes=bparse._get_nodes_in_stringIO(s)
     assert nodes == expected
 
-def test_count_bad_nodes():
+def test_count_bad_items():
     list_of_lists = [["A", "B", "C"], ["B", "C", "D"]]
     expected = {"A": 1, "B": 2, "C": 2, "D": 1 }
-    actual = bparse.count_bad_nodes(list_of_lists)
+    actual = bparse.count_bad_items(list_of_lists)
     assert actual == expected
 
-def test_remove_good_nodes():
+def test_remove_good_items():
     potential_bad_list = {"A": 1, "B": 2, "C": 2, "D": 1 }
     list_of_lists = [["B","F"],["D","E"]]
     expected = {"A": 1, "C": 2}
-    actual = bparse.remove_good_nodes(potential_bad_list, list_of_lists)
+    actual = bparse.remove_good_items(potential_bad_list, list_of_lists)
     assert actual == expected

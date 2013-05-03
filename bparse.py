@@ -89,21 +89,21 @@ def _invoke_bhist(jobid):
     return fullname
 
 from collections import defaultdict
-def count_bad_nodes(list_of_badnode_lists):
+def count_bad_items(list_of_baditem_lists):
     d = defaultdict(int)
-    for badnode_list in list_of_badnode_lists:
-        for badnode in badnode_list:
-            d[badnode] += 1
+    for baditem_list in list_of_baditem_lists:
+        for baditem in baditem_list:
+            d[baditem] += 1
     return d
 
-def remove_good_nodes(bad_nodes, list_of_goodnode_lists):
-    for goodnode_list in list_of_goodnode_lists:
-        for goodnode in goodnode_list:
+def remove_good_items(bad_items, list_of_gooditem_lists):
+    for gooditem_list in list_of_gooditem_lists:
+        for gooditem in gooditem_list:
             try:
-                del bad_nodes[goodnode] # another strategy might be to decrement it instead
+                del bad_items[gooditem] # another strategy might be to decrement it instead
             except KeyError:
                 pass                    # if it wasn't there, nothing to do
-    return bad_nodes
+    return bad_items
 
 import argparse
 if __name__ == '__main__':
@@ -111,7 +111,6 @@ if __name__ == '__main__':
     parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
     parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
     parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + CONFDIR + "<mod>.py")
-#    parser.add_argument("--switch", help="Translate nodes names to switch names", action="store_true")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
     args = parser.parse_args()
 
@@ -126,29 +125,29 @@ if __name__ == '__main__':
         switches = __import__(args.switch)
         log("But not using it yet...")
 
-    nodes_in_good_jobs =  []
-    nodes_in_bad_jobs =  []
+    items_in_good_jobs = []
+    items_in_bad_jobs = []
     for jobid in args.good:
-        nodes_in_good_jobs.append(get_nodes_in_job(jobid))
+        items_in_good_jobs.append(get_nodes_in_job(jobid))
  
     for jobid in args.bad:
-        nodes_in_bad_jobs.append(get_nodes_in_job(jobid))
+        items_in_bad_jobs.append(get_nodes_in_job(jobid))
 
-    potential_bad_nodes = count_bad_nodes(nodes_in_bad_jobs)
-    bad_nodes = remove_good_nodes(potential_bad_nodes, nodes_in_good_jobs)
+    potential_bad_items = count_bad_items(items_in_bad_jobs)
+    bad_items = remove_good_items(potential_bad_items, items_in_good_jobs)
 
-    # transform the dict in list of tuples, sort on the index 1 (the number of times the node occurred in a bad job) starting form higher counts
-    bad_node_list = bad_nodes.items()
-    bad_node_list.sort(key=lambda element: element[1], reverse=True)
+    # transform the dict in list of tuples, sort on the index 1 (the number of times the item occurred in a bad job) starting form higher counts
+    bad_item_list = bad_items.items()
+    bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
     current = len(args.bad) + 1
-    for bad_node in bad_node_list:
-        if bad_node[1] < current:
-            current = bad_node[1]
+    for bad_item in bad_item_list:
+        if bad_item[1] < current:
+            current = bad_item[1]
             if current == len(args.bad):
                 n = "all"
             else:
                 n = str(current)
             print "\n\nNodes occurring in", n, "bad jobs, but none of the good jobs:"
-        print bad_node[0],
+        print bad_item[0],
 
