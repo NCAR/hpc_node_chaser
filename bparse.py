@@ -126,8 +126,10 @@ if __name__ == '__main__':
         log("Loading " + CONFDIR + args.switch + ".py")
         switches = __import__(args.switch)
         translate = switches.translate
+        ITEMS = "Switches"
     else:
         translate = lambda x: x
+        ITEMS = "Nodes"
 
     items_in_good_jobs = []
     items_in_bad_jobs = []
@@ -152,6 +154,6 @@ if __name__ == '__main__':
                 n = "all"
             else:
                 n = str(current)
-            print "\n\nNodes occurring in", n, "bad jobs, but none of the good jobs:"
+            print "\n\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
         print bad_item[0],
 
