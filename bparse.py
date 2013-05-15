@@ -136,11 +136,21 @@ if __name__ == '__main__':
 
     items_in_good_jobs = []
     items_in_bad_jobs = []
+
+    current_item = 0
+    str_todo = "/" + str(len(args.good)) + " good jobs and 0/" + str(len(args.bad)) + " bad jobs."
     for jobid in args.good:
+        current_item += 1
         items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        log("Processed " + str(current_item) + str_todo)
  
+    current_item = 0
+    str_done = str(len(args.good)) + "/" + str(len(args.good)) + " good jobs and "
+    str_todo = "/" + str(len(args.bad)) + " bad jobs."
     for jobid in args.bad:
+        current_item += 1
         items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        log("Processed " + str_done + str(current_item) + str_todo)
 
     potential_bad_items = count_bad_items(items_in_bad_jobs)
     bad_items = remove_good_items(potential_bad_items, items_in_good_jobs)
