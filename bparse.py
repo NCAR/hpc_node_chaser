@@ -170,3 +170,6 @@ if __name__ == '__main__':
             print "\n\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
         print bad_item[0],
 
+    if len(bad_item_list) == 0:
+        print "No obvious bad " + ITEMS.lower() + " found"
+
