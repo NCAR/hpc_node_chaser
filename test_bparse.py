@@ -1,6 +1,8 @@
 import bparse
 import cStringIO
 
+# To run these tests, just invoke "nosetests" on the command line
+
 def test_get_nodes_in_stringIO():
     s=cStringIO.StringIO("""
 This text at the beginning must be ignored
