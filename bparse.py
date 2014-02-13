@@ -160,15 +160,22 @@ if __name__ == '__main__':
     bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
     current = len(args.bad) + 1
+    bad_count = 0
     for bad_item in bad_item_list:
         if bad_item[1] < current:
+            if bad_count > 0:
+                print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
+                bad_count = 0
             current = bad_item[1]
             if current == len(args.bad):
                 n = "all"
             else:
                 n = str(current)
-            print "\n\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
+            print "\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
         print bad_item[0],
+        bad_count = bad_count + 1
+    print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
+    print "\nFor a grand total of " + str(len(bad_item_list)) + " " + ITEMS.lower()
 
     if len(bad_item_list) == 0:
         print "No obvious bad " + ITEMS.lower() + " found"
