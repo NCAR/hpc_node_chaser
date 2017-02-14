@@ -1,5 +1,16 @@
 import helper
 
+# no need to test run
+
+def test_process_good_jobs():
+    assert False, "test not implemented yet"
+
+def test_process_bad_jobs():
+    assert False, "test not implemented yet"
+
+def test_find_bad_nodes():
+    assert False, "test not implemented yet"
+
 def test_count_bad_nodes():
     # repeated nodes in different jobs must be counted repeatedly
     # there can't be repeated nodes
