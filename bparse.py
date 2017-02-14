@@ -65,7 +65,7 @@ def _invoke_bhist(jobid):
         h.log("Invoking: " + command)
         subprocess.call(command, shell=True)
     else:
-        h.log("Nothing to do: " + fullname + " is already there")
+        h.log("No need to invoke bhist. Using cached " + fullname)
     return fullname
 
 if __name__ == '__main__':
