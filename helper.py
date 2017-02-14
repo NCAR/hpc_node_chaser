@@ -45,8 +45,8 @@ def remove_good_items(bad_items, list_of_gooditem_lists):
 def run(help_msg = None, get_nodes_in_job = None):
     global verbose
     parser = argparse.ArgumentParser(description = help_msg)
-    parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
-    parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
+    parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="Job IDs of the jobs to be considered bad", required=True)
+    parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="Job IDs of the jobs to be considered good")
     parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + CONFDIR + "<mod>.py")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
     args = parser.parse_args()
