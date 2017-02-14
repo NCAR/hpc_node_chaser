@@ -41,15 +41,6 @@ def _get_nodes_in_stringIO(data):
     nodes = node_regex.findall(node_string)
     return nodes
 
-def get_nodes_in_job(jobid):
-    """Wrapper facade around the bhist invocation logic and
-    bhist output parser. Simply return the list of nodes
-    where a given jobID ran."""
-    h.log("\n---------------------------------------\nProcessing job " + str(jobid))
-    nodes = _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
-    h.log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
-    return nodes
-
 def _invoke_bhist(jobid):
     """Invoke bhist for a specific jobid and store the
     output in a temporary file. It's useful to cache the output in
@@ -67,6 +58,15 @@ def _invoke_bhist(jobid):
     else:
         h.log("No need to invoke bhist. Using cached " + fullname)
     return fullname
+
+def get_nodes_in_job(jobid):
+    """Wrapper facade around the bhist invocation logic and
+    bhist output parser. Simply return the list of nodes
+    where a given jobID ran."""
+    h.log("\n---------------------------------------\nProcessing job " + str(jobid))
+    nodes = _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
+    h.log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
+    return nodes
 
 if __name__ == '__main__':
     h.run(help_msg = "LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs",
