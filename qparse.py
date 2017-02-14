@@ -27,7 +27,7 @@ def _get_nodes_in_stringIO(data):
     if len(group_of_nodes) > 1:
         for group in group_of_nodes:
             if baseline != group:
-                raise Exception("Multiple entries with different node listed!")
+                raise Exception("Multiple entries with different node listed")
     h.log("Parsing completed")
     return baseline
 
@@ -51,7 +51,11 @@ def get_nodes_in_job(jobid):
     output parser. Simply return the list of nodes
     where a given jobID ran."""
     h.log("\n---------------------------------------\nProcessing job " + str(jobid))
-    nodes = _get_nodes_in_stringIO(open(_invoke_tracejob(jobid)))
+    try:
+        nodes = _get_nodes_in_stringIO(open(_invoke_tracejob(jobid)))
+    except Exception as e:
+        print e, "in job ID", jobid
+        nodes = []
     h.log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
     return nodes
 
