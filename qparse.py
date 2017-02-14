@@ -9,7 +9,15 @@ def _get_nodes_in_stringIO(data):
     with plain strings instead of files."""
     h.log("Parsing...")
     nodes = []
-    print "STUB IMPLEMENTATION: not parsing node list from job ID yet"
+    for line in data:
+        if "exec_vnode=" in line:
+            stuff = line.split()
+            for entry in stuff:
+                if entry.startswith("exec_vnode="):          # exec_vnode=(r10i1n26:ncpus=36)+(r10i1n31:ncpus=36)
+                    pbs_nodes = entry.split("=(")[1]         #             r10i1n26:ncpus=36)+(r10i1n31:ncpus=36)
+                    pbs_node_list = pbs_nodes.split(")+(")   #             r10i1n26:ncpus=36 , r10i1n31:ncpus=36)
+                    for n in pbs_node_list:
+                        nodes.append(n.split(":")[0])        #             r10i1n26          , r10i1n31
     h.log("Parsing completed")
     return nodes
 
