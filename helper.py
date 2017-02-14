@@ -43,6 +43,7 @@ def remove_good_items(bad_items, list_of_gooditem_lists):
     return bad_items
 
 def cli_options(msg):
+    global verbose
     parser = argparse.ArgumentParser(description=msg)
     parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
     parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
