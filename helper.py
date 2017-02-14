@@ -7,7 +7,7 @@ try:
     TMPDIR=os.environ['TMPDIR'] + "/.bparse/"
 except KeyError:
     TMPDIR="/glade/scratch/" + os.environ['USER'] + "/.bparse/"
-try: 
+try:
     os.mkdir(TMPDIR)
 except OSError:
     pass # already exists

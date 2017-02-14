@@ -2,7 +2,7 @@
 import sys, os, subprocess
 import re
 
-import lsf_pbs_parse
+import helper as h
 
 verbose=False
 try:
@@ -134,8 +134,8 @@ if __name__ == '__main__':
         items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
         log("Processed " + str_done + str(current_item) + str_todo)
 
-    potential_bad_items = lsf_pbs_parse.count_bad_items(items_in_bad_jobs)
-    bad_items = lsf_pbs_parse.remove_good_items(potential_bad_items, items_in_good_jobs)
+    potential_bad_items = h.count_bad_items(items_in_bad_jobs)
+    bad_items = h.remove_good_items(potential_bad_items, items_in_good_jobs)
 
     # transform the dict in list of tuples, sort on the index 1 (the number of times the item occurred in a bad job) starting form higher counts
     bad_item_list = bad_items.items()
