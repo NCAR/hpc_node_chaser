@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import sys, os, subprocess
-import re
-
+import os, subprocess, re
 import helper as h
 
 start_regex = re.compile(r".+: Dispatched to \d+ Hosts/Processors ")
@@ -70,48 +68,25 @@ def _invoke_bhist(jobid):
         h.log("Nothing to do: " + fullname + " is already there")
     return fullname
 
-import argparse
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
-    parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
-    parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
-    parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + h.CONFDIR + "<mod>.py")
-    v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
-    args = parser.parse_args()
-
-    if not args.good:
-        args.good=[]
-    if args.verbose:
-        verbose = True
-        h.log(v.help)
-
-    # if a node-to-switch translation has been requested, use it
-    # otherwise make a no-op translate
-    if args.switch:
-        h.log("Loading " + h.CONFDIR + args.switch + ".py")
-        switches = __import__(args.switch)
-        translate = switches.translate
-        ITEMS = "Switches"
-    else:
-        translate = lambda x: x
-        ITEMS = "Nodes"
+    good, bad = h.cli_options("LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
 
     items_in_good_jobs = []
     items_in_bad_jobs = []
 
     current_item = 0
-    str_todo = "/" + str(len(args.good)) + " good jobs and 0/" + str(len(args.bad)) + " bad jobs."
-    for jobid in args.good:
+    str_todo = "/" + str(len(good)) + " good jobs and 0/" + str(len(bad)) + " bad jobs."
+    for jobid in good:
         current_item += 1
-        items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        items_in_good_jobs.append(map(h.translate, get_nodes_in_job(jobid)))
         h.log("Processed " + str(current_item) + str_todo)
  
     current_item = 0
-    str_done = str(len(args.good)) + "/" + str(len(args.good)) + " good jobs and "
-    str_todo = "/" + str(len(args.bad)) + " bad jobs."
-    for jobid in args.bad:
+    str_done = str(len(good)) + "/" + str(len(good)) + " good jobs and "
+    str_todo = "/" + str(len(bad)) + " bad jobs."
+    for jobid in bad:
         current_item += 1
-        items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        items_in_bad_jobs.append(map(h.translate, get_nodes_in_job(jobid)))
         h.log("Processed " + str_done + str(current_item) + str_todo)
 
     potential_bad_items = h.count_bad_items(items_in_bad_jobs)
@@ -121,24 +96,24 @@ if __name__ == '__main__':
     bad_item_list = bad_items.items()
     bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
-    current = len(args.bad) + 1
+    current = len(bad) + 1
     bad_count = 0
     for bad_item in bad_item_list:
         if bad_item[1] < current:
             if bad_count > 0:
-                print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
+                print "\nFor a total of " + str(bad_count) + " " + h.ITEMS.lower()
                 bad_count = 0
             current = bad_item[1]
-            if current == len(args.bad):
+            if current == len(bad):
                 n = "all"
             else:
                 n = str(current)
-            print "\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
+            print "\n" + h.ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
         print bad_item[0],
         bad_count = bad_count + 1
-    print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
-    print "\nFor a grand total of " + str(len(bad_item_list)) + " " + ITEMS.lower()
+    print "\nFor a total of " + str(bad_count) + " " + h.ITEMS.lower()
+    print "\nFor a grand total of " + str(len(bad_item_list)) + " " + h.ITEMS.lower()
 
     if len(bad_item_list) == 0:
-        print "No obvious bad " + ITEMS.lower() + " found"
+        print "No obvious bad " + h.ITEMS.lower() + " found"
 

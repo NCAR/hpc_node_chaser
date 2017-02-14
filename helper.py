@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import sys, os, subprocess
-import re
+import sys, os, argparse
+import helper # itself, to add fields to its dict
 
 verbose=False
 try:
@@ -42,9 +42,8 @@ def remove_good_items(bad_items, list_of_gooditem_lists):
                 pass                    # if it wasn't there, nothing to do
     return bad_items
 
-import argparse
-def something():
-    parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
+def cli_options(msg):
+    parser = argparse.ArgumentParser(description=msg)
     parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
     parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
     parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + CONFDIR + "<mod>.py")
@@ -67,6 +66,12 @@ def something():
     else:
         translate = lambda x: x
         ITEMS = "Nodes"
+
+    helper.translate = translate
+    helper.ITEMS = ITEMS
+    return args.good, args.bad
+
+def stuff():
 
     items_in_good_jobs = []
     items_in_bad_jobs = []
