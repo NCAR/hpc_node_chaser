@@ -69,10 +69,6 @@ def _invoke_bhist(jobid):
     return fullname
 
 if __name__ == '__main__':
-    good, bad = h.cli_options("LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
-
-    items_in_good_jobs = h.process_good_jobs(good, bad, get_nodes_in_job)
-    items_in_bad_jobs =   h.process_bad_jobs(good, bad, get_nodes_in_job)
-
-    h.find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad)
+    h.run(help_msg = "LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs",
+          get_nodes_in_job = get_nodes_in_job)
 
