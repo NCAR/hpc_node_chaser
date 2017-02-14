@@ -74,31 +74,5 @@ if __name__ == '__main__':
     items_in_good_jobs = h.process_good_jobs(good, bad, get_nodes_in_job)
     items_in_bad_jobs =   h.process_bad_jobs(good, bad, get_nodes_in_job)
 
-    potential_bad_items = h.count_bad_items(items_in_bad_jobs)
-    bad_items = h.remove_good_items(potential_bad_items, items_in_good_jobs)
-
-    # transform the dict in list of tuples, sort on the index 1 (the number of times the item occurred in a bad job) starting form higher counts
-    bad_item_list = bad_items.items()
-    bad_item_list.sort(key=lambda element: element[1], reverse=True)
-
-    current = len(bad) + 1
-    bad_count = 0
-    for bad_item in bad_item_list:
-        if bad_item[1] < current:
-            if bad_count > 0:
-                print "\nFor a total of " + str(bad_count) + " " + h.ITEMS.lower()
-                bad_count = 0
-            current = bad_item[1]
-            if current == len(bad):
-                n = "all"
-            else:
-                n = str(current)
-            print "\n" + h.ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
-        print bad_item[0],
-        bad_count = bad_count + 1
-    print "\nFor a total of " + str(bad_count) + " " + h.ITEMS.lower()
-    print "\nFor a grand total of " + str(len(bad_item_list)) + " " + h.ITEMS.lower()
-
-    if len(bad_item_list) == 0:
-        print "No obvious bad " + h.ITEMS.lower() + " found"
+    h.find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad)
 

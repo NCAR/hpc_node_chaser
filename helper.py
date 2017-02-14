@@ -93,7 +93,7 @@ def process_bad_jobs(good, bad, get_nodes_in_job):
         log("Processed " + str_done + str(current_item) + str_todo)
     return items_in_bad_jobs
 
-def other_stuff(bad):
+def find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad):
     potential_bad_items = count_bad_items(items_in_bad_jobs)
     bad_items = remove_good_items(potential_bad_items, items_in_good_jobs)
     # transform the dict in list of tuples, sort on the index 1 (the number of times the item occurred in a bad job) starting form higher counts
