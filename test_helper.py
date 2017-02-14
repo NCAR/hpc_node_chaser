@@ -3,7 +3,12 @@ import helper
 # no need to test run
 
 def test_process_jobs():
-    assert False, "test not implemented yet"
+    jobs = ["1234", "5678", "9101112"]
+    helper.translate = lambda x: x
+    func = lambda x: x
+    actual = helper.process_jobs(jobs, get_nodes_in_job=func)
+    expected = ["1", "2", "3"]
+    assert actual == expected
 
 def test_find_bad_nodes():
     assert False, "test not implemented yet"
