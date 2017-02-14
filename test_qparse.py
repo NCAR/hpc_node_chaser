@@ -1,6 +1,12 @@
 import qparse
 import cStringIO, pytest
 
+def test_get_nodes_in_stringIO_empty():
+    s=cStringIO.StringIO("""nothing to be found here""")
+    expected = []
+    nodes=qparse._get_nodes_in_stringIO(s)
+    assert nodes == expected
+
 def test_get_nodes_in_stringIO_single():
     s=cStringIO.StringIO("""
 02/09/2017 07:54:27  A    queue=regular
