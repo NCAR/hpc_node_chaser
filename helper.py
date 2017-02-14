@@ -71,30 +71,27 @@ def run(help_msg = None, get_nodes_in_job = None):
     helper.translate = translate
     helper.ITEMS = ITEMS
 
-    items_in_good_jobs = process_good_jobs(args.good, args.bad, get_nodes_in_job)
-    items_in_bad_jobs =  process_bad_jobs(args.good, args.bad, get_nodes_in_job)
+    msg = "/" + str(len(args.good)) + " good jobs and 0/" + str(len(args.bad)) + " bad jobs."
+    items_in_good_jobs = process_jobs(jobs = args.good,
+                                      msg_tail = msg,
+                                      get_nodes_in_job=get_nodes_in_job)
+
+    msg_head = str(len(args.good)) + "/" + str(len(args.good)) + " good jobs and "
+    msg_tail = "/" + str(len(args.bad)) + " bad jobs."
+    items_in_bad_jobs =  process_jobs(jobs = args.bad,
+                                      msg_head = msg_head,
+                                      msg_tail = msg_tail,
+                                      get_nodes_in_job=get_nodes_in_job)
     find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, args.bad)
 
-def process_good_jobs(good, bad, get_nodes_in_job):
-    items_in_good_jobs = []
+def process_jobs(jobs=None, msg_head="", msg_tail="", get_nodes_in_job=None):
+    items_in_jobs = []
     current_item = 0
-    str_todo = "/" + str(len(good)) + " good jobs and 0/" + str(len(bad)) + " bad jobs."
-    for jobid in good:
+    for jobid in jobs:
         current_item += 1
-        items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
-        log("Processed " + str(current_item) + str_todo)
-    return items_in_good_jobs
-
-def process_bad_jobs(good, bad, get_nodes_in_job):
-    items_in_bad_jobs = []
-    current_item = 0
-    str_done = str(len(good)) + "/" + str(len(good)) + " good jobs and "
-    str_todo = "/" + str(len(bad)) + " bad jobs."
-    for jobid in bad:
-        current_item += 1
-        items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
-        log("Processed " + str_done + str(current_item) + str_todo)
-    return items_in_bad_jobs
+        items_in_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        log("Processed " + msg_head + str(current_item) + msg_tail)
+    return items_in_jobs
 
 def find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad):
     potential_bad_items = count_bad_items(items_in_bad_jobs)
