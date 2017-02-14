@@ -25,7 +25,7 @@ def _get_nodes_in_stringIO(data):
         baseline = group_of_nodes[0]
         for group in group_of_nodes:
             if baseline != group:
-                raise Exception("Something went wrong")
+                raise Exception("Multiple entries with different node listed!")
     h.log("Parsing completed")
     return nodes
 
