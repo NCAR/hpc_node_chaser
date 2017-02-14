@@ -8,9 +8,10 @@ def _get_nodes_in_stringIO(data):
     and open filename in the invocation so this can be tested
     with plain strings instead of files."""
     h.log("Parsing...")
-    nodes = []
+    group_of_nodes = []
     for line in data:
         if "exec_vnode=" in line:
+            nodes = []
             stuff = line.split()
             for entry in stuff:
                 if entry.startswith("exec_vnode="):          # exec_vnode=(r10i1n26:ncpus=36)+(r10i1n31:ncpus=36)
@@ -18,6 +19,13 @@ def _get_nodes_in_stringIO(data):
                     pbs_node_list = pbs_nodes.split(")+(")   #             r10i1n26:ncpus=36 , r10i1n31:ncpus=36)
                     for n in pbs_node_list:
                         nodes.append(n.split(":")[0])        #             r10i1n26          , r10i1n31
+            group_of_nodes.append(nodes)
+
+    if len(group_of_nodes) > 2:
+        baseline = group_of_nodes[0]
+        for group in group_of_nodes:
+            if baseline != group:
+                raise Exception("Something went wrong")
     h.log("Parsing completed")
     return nodes
 
