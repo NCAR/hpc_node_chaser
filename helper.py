@@ -72,34 +72,35 @@ def cli_options(msg):
     helper.ITEMS = ITEMS
     return args.good, args.bad
 
-def stuff():
-
+def process_good_jobs(good, bad, get_nodes_in_job):
     items_in_good_jobs = []
-    items_in_bad_jobs = []
-
     current_item = 0
-    str_todo = "/" + str(len(args.good)) + " good jobs and 0/" + str(len(args.bad)) + " bad jobs."
-    for jobid in args.good:
+    str_todo = "/" + str(len(good)) + " good jobs and 0/" + str(len(bad)) + " bad jobs."
+    for jobid in good:
         current_item += 1
         items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
         log("Processed " + str(current_item) + str_todo)
- 
+    return items_in_good_jobs
+
+def process_bad_jobs(good, bad, get_nodes_in_job):
+    items_in_bad_jobs = []
     current_item = 0
-    str_done = str(len(args.good)) + "/" + str(len(args.good)) + " good jobs and "
-    str_todo = "/" + str(len(args.bad)) + " bad jobs."
-    for jobid in args.bad:
+    str_done = str(len(good)) + "/" + str(len(good)) + " good jobs and "
+    str_todo = "/" + str(len(bad)) + " bad jobs."
+    for jobid in bad:
         current_item += 1
         items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
         log("Processed " + str_done + str(current_item) + str_todo)
+    return items_in_bad_jobs
 
+def other_stuff(bad):
     potential_bad_items = count_bad_items(items_in_bad_jobs)
     bad_items = remove_good_items(potential_bad_items, items_in_good_jobs)
-
     # transform the dict in list of tuples, sort on the index 1 (the number of times the item occurred in a bad job) starting form higher counts
     bad_item_list = bad_items.items()
     bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
-    current = len(args.bad) + 1
+    current = len(bad) + 1
     bad_count = 0
     for bad_item in bad_item_list:
         if bad_item[1] < current:
@@ -107,7 +108,7 @@ def stuff():
                 print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
                 bad_count = 0
             current = bad_item[1]
-            if current == len(args.bad):
+            if current == len(bad):
                 n = "all"
             else:
                 n = str(current)

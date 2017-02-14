@@ -71,23 +71,8 @@ def _invoke_bhist(jobid):
 if __name__ == '__main__':
     good, bad = h.cli_options("LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
 
-    items_in_good_jobs = []
-    items_in_bad_jobs = []
-
-    current_item = 0
-    str_todo = "/" + str(len(good)) + " good jobs and 0/" + str(len(bad)) + " bad jobs."
-    for jobid in good:
-        current_item += 1
-        items_in_good_jobs.append(map(h.translate, get_nodes_in_job(jobid)))
-        h.log("Processed " + str(current_item) + str_todo)
- 
-    current_item = 0
-    str_done = str(len(good)) + "/" + str(len(good)) + " good jobs and "
-    str_todo = "/" + str(len(bad)) + " bad jobs."
-    for jobid in bad:
-        current_item += 1
-        items_in_bad_jobs.append(map(h.translate, get_nodes_in_job(jobid)))
-        h.log("Processed " + str_done + str(current_item) + str_todo)
+    items_in_good_jobs = h.process_good_jobs(good, bad, get_nodes_in_job)
+    items_in_bad_jobs =   h.process_bad_jobs(good, bad, get_nodes_in_job)
 
     potential_bad_items = h.count_bad_items(items_in_bad_jobs)
     bad_items = h.remove_good_items(potential_bad_items, items_in_good_jobs)
