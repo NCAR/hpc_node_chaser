@@ -4,22 +4,6 @@ import re
 
 import helper as h
 
-verbose=False
-try:
-    TMPDIR=os.environ['TMPDIR'] + "/.bparse/"
-except KeyError:
-    TMPDIR="/glade/scratch/" + os.environ['USER'] + "/.bparse/"
-try: 
-    os.mkdir(TMPDIR)
-except OSError:
-    pass # already exists
-
-try:
-    CONFDIR=os.environ['BPARSEDIR']
-except KeyError:
-    CONFDIR=os.environ['HOME'] + "/.bparse/"
-sys.path.append(CONFDIR)
-
 start_regex = re.compile(r".+: Dispatched to \d+ Hosts/Processors ")
 node_regex = re.compile(r"""<           # start of the pattern
                               \d+       # number of tasks on that node
@@ -32,10 +16,6 @@ node_regex = re.compile(r"""<           # start of the pattern
                                         # therefore we use the modified '*?' variant
                               >         # end of the pattern""", re.VERBOSE) 
 
-def log(string):
-    if verbose:
-        print string
-
 def _get_nodes_in_stringIO(data):
     """Parse a file or stringIO object in the bhist format
     and return the list of nodes. It is useful to pass data
@@ -43,7 +23,7 @@ def _get_nodes_in_stringIO(data):
     with plain strings instead of files."""
     found_start = False
     node_string_as_list=[]
-    log("Parsing...")
+    h.log("Parsing...")
     for line in data:
         if found_start:
             if not line.startswith(' '):              # end of node list section
@@ -54,11 +34,11 @@ def _get_nodes_in_stringIO(data):
         else:
             match = start_regex.findall(line)
             if match:
-                log("Node list section found, starting in line\n===\n" + line + "===")
+                h.log("Node list section found, starting in line\n===\n" + line + "===")
                 node_string_as_list.append(line.lstrip(match[0]).strip())
                 found_start = True
 
-    log("Parsing completed")
+    h.log("Parsing completed")
     node_string = ''.join(node_string_as_list)
     nodes = node_regex.findall(node_string)
     return nodes
@@ -67,9 +47,9 @@ def get_nodes_in_job(jobid):
     """Wrapper facade around the bhist invocation logic and
     bhist output parser. Simply return the list of nodes
     where a given jobID ran."""
-    log("\n---------------------------------------\nProcessing job " + str(jobid))
+    h.log("\n---------------------------------------\nProcessing job " + str(jobid))
     nodes = _get_nodes_in_stringIO(open(_invoke_bhist(jobid)))
-    log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
+    h.log("Ended processing job " + str(jobid) + ", " + str(len(nodes)) + " nodes found.")
     return nodes
 
 def _invoke_bhist(jobid):
@@ -80,14 +60,14 @@ def _invoke_bhist(jobid):
     investigating a problem. This function returns the full path
     of the file containing the bhist output."""
     name = "bhist." + str(jobid) + ".txt"
-    fullname = TMPDIR + name
-    ALL_FILES = os.listdir(TMPDIR)
+    fullname = h.TMPDIR + name
+    ALL_FILES = os.listdir(h.TMPDIR)
     if not name in ALL_FILES:
         command = "bhist -n 50 -l " + str(jobid) + " > " + fullname
-        log("Invoking: " + command)
+        h.log("Invoking: " + command)
         subprocess.call(command, shell=True)
     else:
-        log("Nothing to do: " + fullname + " is already there")
+        h.log("Nothing to do: " + fullname + " is already there")
     return fullname
 
 import argparse
@@ -95,7 +75,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="LSF helper to find bad performing nodes or switches from a list of good and bad LSF jobs")
     parser.add_argument("--bad",  metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered bad", required=True)
     parser.add_argument("--good", metavar="ID", type=int, nargs='+', help="LSF job IDs of the jobs to be considered good")
-    parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + CONFDIR + "<mod>.py")
+    parser.add_argument("--switch", metavar="<mod>", help="Translate nodes names to switch names, using python module " + h.CONFDIR + "<mod>.py")
     v=parser.add_argument("--verbose", help="Verbosely print messages about everything", action="store_true")
     args = parser.parse_args()
 
@@ -103,12 +83,12 @@ if __name__ == '__main__':
         args.good=[]
     if args.verbose:
         verbose = True
-        log(v.help)
+        h.log(v.help)
 
     # if a node-to-switch translation has been requested, use it
     # otherwise make a no-op translate
     if args.switch:
-        log("Loading " + CONFDIR + args.switch + ".py")
+        h.log("Loading " + h.CONFDIR + args.switch + ".py")
         switches = __import__(args.switch)
         translate = switches.translate
         ITEMS = "Switches"
@@ -124,7 +104,7 @@ if __name__ == '__main__':
     for jobid in args.good:
         current_item += 1
         items_in_good_jobs.append(map(translate, get_nodes_in_job(jobid)))
-        log("Processed " + str(current_item) + str_todo)
+        h.log("Processed " + str(current_item) + str_todo)
  
     current_item = 0
     str_done = str(len(args.good)) + "/" + str(len(args.good)) + " good jobs and "
@@ -132,7 +112,7 @@ if __name__ == '__main__':
     for jobid in args.bad:
         current_item += 1
         items_in_bad_jobs.append(map(translate, get_nodes_in_job(jobid)))
-        log("Processed " + str_done + str(current_item) + str_todo)
+        h.log("Processed " + str_done + str(current_item) + str_todo)
 
     potential_bad_items = h.count_bad_items(items_in_bad_jobs)
     bad_items = h.remove_good_items(potential_bad_items, items_in_good_jobs)
