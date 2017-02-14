@@ -21,7 +21,6 @@ def _get_nodes_in_stringIO(data):
                         nodes.append(n.split(":")[0])        #             r10i1n26          , r10i1n31
             group_of_nodes.append(nodes)
 
-    print group_of_nodes
     baseline = []
     if len(group_of_nodes) >= 1:
         baseline = group_of_nodes[0]
