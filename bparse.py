@@ -81,7 +81,7 @@ def _invoke_bhist(jobid):
     fullname = TMPDIR + name
     ALL_FILES = os.listdir(TMPDIR)
     if not name in ALL_FILES:
-        command = "bhist -n 0 -l " + str(jobid) + " > " + fullname
+        command = "bhist -n 50 -l " + str(jobid) + " > " + fullname
         log("Invoking: " + command)
         subprocess.call(command, shell=True)
     else:
