@@ -3,7 +3,7 @@ import cStringIO, pytest
 
 def test_get_nodes_in_stringIO_empty():
     s=cStringIO.StringIO("""nothing to be found here""")
-    expected = []
+    expected = [[]]
     nodes=qparse._get_nodes_in_stringIO(s)
     assert nodes == expected
 
