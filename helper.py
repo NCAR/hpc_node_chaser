@@ -100,7 +100,9 @@ def find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad):
     bad_item_list = bad_items.items()
     bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
-    current = len(bad) + 1
+    #current = len(bad) + 1
+    current = len(items_in_bad_jobs) + 1
+    log("DEBUG: compare " + str(len(bad) + 1) + " and " + str(len(items_in_bad_jobs) + 1))
     bad_count = 0
     for bad_item in bad_item_list:
         if bad_item[1] < current:
