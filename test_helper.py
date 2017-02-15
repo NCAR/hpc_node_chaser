@@ -22,8 +22,26 @@ def test_process_jobs_one_node():
                 ["7258-ib1"]]
     assert actual == expected
 
-def test_process_jobs_more():
-    assert False
+def test_process_jobs_when_repeated_by_PBS():
+    jobs = [929324, 932534, 942406, 943425, 936612, 943656, 943571]
+    helper.translate = lambda x: x
+    func = lambda x: ([str(x) + "-1st_node-1st_run", str(x) + "-2nd_node-1st_run"], [str(x) + "-1st_node-2nd_run", str(x) + "-2nd_node-2nd_run"])
+    actual = helper.process_jobs(jobs, get_nodes_in_job=func)
+    expected = [["929324-1st_node-1st_run", "929324-2nd_node-1st_run"],
+                ["929324-1st_node-2nd_run", "929324-2nd_node-2nd_run"],
+                ["932534-1st_node-1st_run", "932534-2nd_node-1st_run"],
+                ["932534-1st_node-2nd_run", "932534-2nd_node-2nd_run"],
+                ["942406-1st_node-1st_run", "942406-2nd_node-1st_run"],
+                ["942406-1st_node-2nd_run", "942406-2nd_node-2nd_run"],
+                ["943425-1st_node-1st_run", "943425-2nd_node-1st_run"],
+                ["943425-1st_node-2nd_run", "943425-2nd_node-2nd_run"],
+                ["936612-1st_node-1st_run", "936612-2nd_node-1st_run"],
+                ["936612-1st_node-2nd_run", "936612-2nd_node-2nd_run"],
+                ["943656-1st_node-1st_run", "943656-2nd_node-1st_run"],
+                ["943656-1st_node-2nd_run", "943656-2nd_node-2nd_run"],
+                ["943571-1st_node-1st_run", "943571-2nd_node-1st_run"],
+                ["943571-1st_node-2nd_run", "943571-2nd_node-2nd_run"]]
+    assert actual == expected
 
 def test_find_bad_nodes():
     assert False, "test not implemented yet"
