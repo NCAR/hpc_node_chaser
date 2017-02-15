@@ -29,7 +29,7 @@ def _get_nodes_in_stringIO(data):
             if baseline != group:
                 raise Exception("Multiple entries with different node listed")
     h.log("Parsing completed")
-    return baseline
+    return [baseline]
 
 def _invoke_tracejob(jobid):
     """Invoke tracejob for a specific jobid. TBD if storing the
