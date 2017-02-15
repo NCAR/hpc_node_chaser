@@ -89,7 +89,7 @@ def process_jobs(jobs=None, msg_head="", msg_tail="", get_nodes_in_job=None):
     current_item = 0
     for jobid in jobs:
         current_item += 1
-        items_in_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        items_in_jobs.extend(map(translate, get_nodes_in_job(jobid)))
         log("Processed " + msg_head + str(current_item) + msg_tail)
     return items_in_jobs
 
