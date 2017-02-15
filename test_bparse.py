@@ -18,10 +18,10 @@ Fri Apr 19 02:07:32 2012: Starting (Pid 22545);
     """)
     # note that be6352-ib is mentioned by chance and should not be in the expected list
     # note the same is true for be1234-ib
-    expected = ["be3769-ib", "be3770-ib", "be3771-ib", "be3772-ib", "be3801-ib", 
-    "be3802-ib", "be3803-ib", "be3804-ib", "be3805-ib", "be3806-ib", "be3807-ib", 
+    expected = [["be3769-ib", "be3770-ib", "be3771-ib", "be3772-ib", "be3801-ib",
+    "be3802-ib", "be3803-ib", "be3804-ib", "be3805-ib", "be3806-ib", "be3807-ib",
     "be3808-ib", "be3809-ib", "be3810-ib", "be3811-ib", "be3812-ib", "be3813-ib",
     "be3814-ib", "be3815-ib", "be3816-ib", "be3817-ib", "be3818-ib", "be3819-ib",
-    "be3820-ib", "be3821-ib"]
+    "be3820-ib", "be3821-ib"]]
     nodes=bparse._get_nodes_in_stringIO(s)
     assert nodes == expected

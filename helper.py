@@ -89,7 +89,7 @@ def process_jobs(jobs=None, msg_head="", msg_tail="", get_nodes_in_job=None):
     current_item = 0
     for jobid in jobs:
         current_item += 1
-        items_in_jobs.append(map(translate, get_nodes_in_job(jobid)))
+        items_in_jobs.extend(map(translate, get_nodes_in_job(jobid)))
         log("Processed " + msg_head + str(current_item) + msg_tail)
     return items_in_jobs
 
@@ -100,7 +100,10 @@ def find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad):
     bad_item_list = bad_items.items()
     bad_item_list.sort(key=lambda element: element[1], reverse=True)
 
-    current = len(bad) + 1
+    #current = len(bad) + 1
+    current = len(items_in_bad_jobs) + 1
+    log("DEBUG: compare " + str(len(bad) + 1) + " and " + str(len(items_in_bad_jobs) + 1))
+    print "Considering", current - 1,  "runs (some might have run more than once)"
     bad_count = 0
     for bad_item in bad_item_list:
         if bad_item[1] < current:
@@ -108,11 +111,7 @@ def find_bad_nodes(items_in_good_jobs, items_in_bad_jobs, bad):
                 print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()
                 bad_count = 0
             current = bad_item[1]
-            if current == len(bad):
-                n = "all"
-            else:
-                n = str(current)
-            print "\n" + ITEMS + " occurring in", n, "bad jobs, but none of the good jobs:"
+            print "\n" + ITEMS + " occurring in", current, "bad runs, but none of the good runs:"
         print bad_item[0],
         bad_count = bad_count + 1
     print "\nFor a total of " + str(bad_count) + " " + ITEMS.lower()

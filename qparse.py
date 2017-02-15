@@ -2,7 +2,7 @@
 import os, subprocess, re
 import helper as h
 
-def _get_nodes_in_stringIO(data):
+def _get_nodes_in_stringIO(data, id="<unknown ID>"):
     """Parse a file or stringIO object in the tracejob format
     and return the list of nodes. It is useful to pass data
     and open filename in the invocation so this can be tested
@@ -21,15 +21,14 @@ def _get_nodes_in_stringIO(data):
                         nodes.append(n.split(":")[0])        #             r10i1n26          , r10i1n31
             group_of_nodes.append(nodes)
 
-    baseline = []
-    if len(group_of_nodes) >= 1:
-        baseline = group_of_nodes[0]
-    if len(group_of_nodes) > 1:
-        for group in group_of_nodes:
-            if baseline != group:
-                raise Exception("Multiple entries with different node listed")
+    tbr = []
+    for group in group_of_nodes:
+        if group not in tbr:
+            tbr.append(group)
+    if len(tbr) > 1:
+        print "WARNING: job", id, "ran", len(tbr), "times"
     h.log("Parsing completed")
-    return baseline
+    return tbr
 
 def _invoke_tracejob(jobid):
     """Invoke tracejob for a specific jobid. TBD if storing the
@@ -52,7 +51,7 @@ def get_nodes_in_job(jobid):
     where a given jobID ran."""
     h.log("\n---------------------------------------\nProcessing job " + str(jobid))
     try:
-        nodes = _get_nodes_in_stringIO(open(_invoke_tracejob(jobid)))
+        nodes = _get_nodes_in_stringIO(open(_invoke_tracejob(jobid)), id=jobid)
     except Exception as e:
         print e, "in job ID", jobid
         nodes = []

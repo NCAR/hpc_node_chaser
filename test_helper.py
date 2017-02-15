@@ -5,7 +5,7 @@ import helper
 def test_process_jobs_two_nodes():
     jobs = [1234, 5678, 9101112]
     helper.translate = lambda x: x
-    func = lambda x: [str(x) + "-ib1", str(x) + "-ib2"]
+    func = lambda x: [[str(x) + "-ib1", str(x) + "-ib2"]]
     actual = helper.process_jobs(jobs, get_nodes_in_job=func)
     expected = [[   "1234-ib1",    "1234-ib2"],
                 [   "5678-ib1",    "5678-ib2"],
@@ -15,7 +15,7 @@ def test_process_jobs_two_nodes():
 def test_process_jobs_one_node():
     jobs = [3875, 4960, 7258]
     helper.translate = lambda x: x
-    func = lambda x: [str(x) + "-ib1"]
+    func = lambda x: [[str(x) + "-ib1"]]
     actual = helper.process_jobs(jobs, get_nodes_in_job=func)
     expected = [["3875-ib1"],
                 ["4960-ib1"],
