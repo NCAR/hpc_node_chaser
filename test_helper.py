@@ -13,7 +13,14 @@ def test_process_jobs_two_nodes():
     assert actual == expected
 
 def test_process_jobs_one_node():
-    assert False
+    jobs = [3875, 4960, 7258]
+    helper.translate = lambda x: x
+    func = lambda x: [str(x) + "-ib1"]
+    actual = helper.process_jobs(jobs, get_nodes_in_job=func)
+    expected = [["3875-ib1"],
+                ["4960-ib1"],
+                ["7258-ib1"]]
+    assert actual == expected
 
 def test_process_jobs_more():
     assert False
