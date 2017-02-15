@@ -39,7 +39,7 @@ def _get_nodes_in_stringIO(data):
     h.log("Parsing completed")
     node_string = ''.join(node_string_as_list)
     nodes = node_regex.findall(node_string)
-    return nodes
+    return [nodes]
 
 def _invoke_bhist(jobid):
     """Invoke bhist for a specific jobid and store the
