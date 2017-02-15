@@ -1,8 +1,8 @@
 import helper
 
-# no need to test run
+# no need to test run()
 
-def test_process_jobs():
+def test_process_jobs_two_nodes():
     jobs = [1234, 5678, 9101112]
     helper.translate = lambda x: x
     func = lambda x: [str(x) + "-ib1", str(x) + "-ib2"]
@@ -11,6 +11,12 @@ def test_process_jobs():
                 [   "5678-ib1",    "5678-ib2"],
                 ["9101112-ib1", "9101112-ib2"]]
     assert actual == expected
+
+def test_process_jobs_one_node():
+    assert False
+
+def test_process_jobs_more():
+    assert False
 
 def test_find_bad_nodes():
     assert False, "test not implemented yet"
