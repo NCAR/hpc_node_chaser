@@ -21,15 +21,12 @@ def _get_nodes_in_stringIO(data):
                         nodes.append(n.split(":")[0])        #             r10i1n26          , r10i1n31
             group_of_nodes.append(nodes)
 
-    baseline = []
-    if len(group_of_nodes) >= 1:
-        baseline = group_of_nodes[0]
-    if len(group_of_nodes) > 1:
-        for group in group_of_nodes:
-            if baseline != group:
-                raise Exception("Multiple entries with different node listed")
+    tbr = []
+    for group in group_of_nodes:
+        if group not in tbr:
+            tbr.append(group)
     h.log("Parsing completed")
-    return [baseline]
+    return tbr
 
 def _invoke_tracejob(jobid):
     """Invoke tracejob for a specific jobid. TBD if storing the
