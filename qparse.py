@@ -46,7 +46,7 @@ def _invoke_tracejob(jobid):
     return fullname
 
 def get_nodes_in_job(jobid):
-    """Wrapper facade around the bhist invocation logic and
+    """Wrapper facade around the tracejob invocation logic and
     output parser. Simply return the list of nodes
     where a given jobID ran."""
     h.log("\n---------------------------------------\nProcessing job " + str(jobid))
