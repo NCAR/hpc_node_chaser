@@ -4,7 +4,14 @@ import sys
 import helper as h
 
 def parse(data):
-    return "a"
+    nodes = []
+    for line in data:
+        linenodes = line.split(",")
+        for n in linenodes:
+            node = n.strip()
+            if len(node) > 0:
+                nodes.append(node)
+    return [nodes,]
 
 def get_nodes_in_file(filename):
     h.log("\n---------------------------------------\nProcessing file " + str(filename))
